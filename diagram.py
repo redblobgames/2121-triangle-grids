@@ -16,7 +16,9 @@ for q in range(-7, 8):
         grid.append((q, r, 1-q-r))
         grid.append((q, r, 2-q-r))
 
-def redraw():
+def draw():
+    """Return a map from triangle to polygon svg object"""
+    svg_objects = {}
     for triangle in grid:
         (a, b, c) = triangle
         corners = updown_tri.tri_corners(*triangle)
@@ -33,17 +35,33 @@ def redraw():
         text <= svg.tspan(",")
         text <= svg.tspan(triangle[2], fill="hsl(200, 100%, 45%)")
 
-        fill = "none"
-        if a == 2: fill = "hsl(90, 40%, 87%)"
-        if b == 2: fill = "hsl(200, 35%, 90%)"
-        if c == 2: fill = "hsl(300, 30%, 90%)"
-        if a == 2 and b == 2 and c == 2: fill = "hsl(60, 100%, 85%)"
-
-        diagram <= svg.polygon(fill=fill, stroke="black", stroke_width="0.02",
+        polygon = svg.polygon(fill="none", stroke="black", stroke_width="0.02",
                                points = " ".join([str(x)+","+str(y) for (x,y) in corners]))
+        diagram <= polygon
         diagram <= text
+        svg_objects[triangle] = polygon
 
-redraw()
+    return svg_objects
 
-# TODO: on mouseover, set the "current" position, and redraw
-# TODO: need to hold on to the polygons so that we can go back and update         polygon.attrs["fill"] = …
+# global
+svg_objects = draw()
+
+def recolor_handler(selected_triangle):
+    def handler(event):
+        for (triangle, polygon) in svg_objects.items():
+            fill = "none"
+            if selected_triangle[0] == triangle[0]: fill = "hsl(90, 40%, 87%)"
+            if selected_triangle[1] == triangle[1]: fill = "hsl(200, 35%, 90%)"
+            if selected_triangle[2] == triangle[2]: fill = "hsl(300, 30%, 90%)"
+            if selected_triangle == triangle: fill = "hsl(60, 100%, 85%)"
+            polygon.attrs["fill"] = fill
+        
+    return handler
+
+def add_interactivity():
+    for (triangle, polygon) in svg_objects.items():
+        polygon.bind("pointerenter", recolor_handler(triangle))
+
+add_interactivity()
+
+
