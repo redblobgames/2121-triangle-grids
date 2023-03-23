@@ -2,8 +2,8 @@
 
   <head>
     <meta charset="utf-8">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/brython@3.9.0/brython.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/brython@3/brython_stdlib.js"></script>
+    <script type="text/javascript" src="third_party/Brython-3.11.0/brython.js"></script>
+    <script src="third_party/Brython-3.11.0/brython_stdlib.js"></script>
     <style>
       svg text { font-size: 0.2px; font-family: sans-serif; font-weight: bold; pointer-events: none; }
     </style>
@@ -12,14 +12,17 @@
   <body onload="brython()">
 
     <figure>
-      <svg viewBox="-11 -8 20 15">
+      <svg viewBox="-11 -6 20 12">
         <g id="drawing-area"></g>
       </svg>
     </figure>
     
     <script type="text/python" src="diagram.py"></script>
 
-
+    <p>
+      This uses <a href="https://github.com/brython-dev/brython/">Brython</a>, BSD-3 licensed.
+    </p>
+    
   </body>
 
 </html>
